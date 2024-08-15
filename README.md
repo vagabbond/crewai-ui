@@ -25,7 +25,7 @@ Follow these steps to run the project:
    Change your current directory to the project directory:
 
    ```bash
-   cd crewai
+   cd crewai-ui
    ```
 
 3. **Install the dependencies**
