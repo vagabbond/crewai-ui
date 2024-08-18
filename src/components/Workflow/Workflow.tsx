@@ -25,9 +25,9 @@ import { setWorkflow } from '../../redux/user/userSlice';
 
 import CustomNode from './CustomNode';
 import CustomEdge from './CustomEdge';
+import WorkflowBody from './WorkflowBody';
 
 import { IEdge, INode, IProject } from '../../types/interfaces/project';
-import WorkflowBody from './WorkflowBody';
 
 const nodeTypes: NodeTypes = {
   customNode: CustomNode
@@ -48,6 +48,7 @@ export default function Workflow() {
   const [nodeId, setNodeId] = useState<string>('');
 
   const edgeReconnectSuccessful = useRef(true);
+
   const toggleDrawer = (nodeId?: string) => {
     setIsOpen((prevState) => !prevState);
     if (nodeId) {
@@ -116,7 +117,9 @@ export default function Workflow() {
     [setNodes]
   );
   const onEdgesChange: OnEdgesChange = useCallback(
-    (changes) => setEdges((eds) => eds && applyEdgeChanges(changes, eds)),
+    (changes) => {
+      setEdges((eds) => eds && applyEdgeChanges(changes, eds));
+    },
     [setEdges]
   );
   const addNode = useCallback(
@@ -144,6 +147,29 @@ export default function Workflow() {
     }
     edgeReconnectSuccessful.current = true;
   }, []);
+  const saveWorkflow = () => {
+    if (nodes) {
+      console.log('saveWorkflow', nodes);
+      dispatch(
+        setWorkflow({
+          id,
+          workflow: {
+            nodes: nodes.map((node) => ({
+              id: node.id,
+              type: node.type,
+              position: node.position,
+              data: {
+                label: node.data.label,
+                id: node.data.id,
+                isSequential: node.data.isSequential
+              }
+            })),
+            edges
+          }
+        })
+      );
+    }
+  };
 
   return (
     <ReactFlowProvider>
@@ -151,6 +177,7 @@ export default function Workflow() {
         nodes={nodes}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
+        onNodeDragStop={saveWorkflow}
         edges={edges}
         edgeTypes={edgeTypes}
         onEdgesChange={onEdgesChange}
