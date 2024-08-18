@@ -40,9 +40,17 @@ const userSlice = createSlice({
       state.projects[projectIndex].workflow.nodes.push(action.payload.workflow.node);
       state.projects[projectIndex].workflow.edges.push(action.payload.workflow.edge);
     },
+    setProjectStatus(state, action) {
+      state.projects = state.projects.map((project) => {
+        if (project.id === action.payload.id) {
+          project.status = action.payload.status;
+        }
+        return project;
+      });
+    },
     setWorkflow(state, action) {
       state.projects = state.projects.map((project) => {
-        if (project.id === action.payload.projectId) {
+        if (project.id === action.payload.id) {
           project.workflow = action.payload.workflow;
         }
         return project;
@@ -113,6 +121,7 @@ export const {
   setTools,
   setAgents,
   setProjects,
+  setProjectStatus,
   deleteProject,
   updateAgent,
   deleteAgent,

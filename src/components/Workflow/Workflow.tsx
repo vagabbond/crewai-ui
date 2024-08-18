@@ -1,14 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   ReactFlow,
-  Controls,
-  Background,
   addEdge as addEdgeFlow,
   NodeTypes,
   EdgeTypes,
   OnConnect,
-  BackgroundVariant,
-  Panel,
   OnNodesChange,
   applyNodeChanges,
   type Node,
@@ -21,14 +18,16 @@ import {
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
-import CustomNode from './CustomNode';
-import SideBar from '../SideBar/SideBar';
+
 import { useAppDispatch, useAppSelector } from '../../redux/store';
-import { useParams } from 'react-router-dom';
+
 import { setWorkflow } from '../../redux/user/userSlice';
+
+import CustomNode from './CustomNode';
 import CustomEdge from './CustomEdge';
-import SpeedDail from '../SpeedDial/SpeedDail';
+
 import { IEdge, INode, IProject } from '../../types/interfaces/project';
+import WorkflowBody from './WorkflowBody';
 
 const nodeTypes: NodeTypes = {
   customNode: CustomNode
@@ -38,23 +37,65 @@ const edgeTypes: EdgeTypes = {
 };
 
 export default function Workflow() {
-  const edgeReconnectSuccessful = useRef(true);
   const { projects } = useAppSelector((state) => state.user);
+
   const { id } = useParams();
   const dispatch = useAppDispatch();
+
   const [nodes, setNodes] = useState<Node[]>();
   const [edges, setEdges] = useState<Edge[]>();
+  const [isOpen, setIsOpen] = useState(false);
+  const [nodeId, setNodeId] = useState<string>('');
 
+  const edgeReconnectSuccessful = useRef(true);
+  const toggleDrawer = (nodeId?: string) => {
+    setIsOpen((prevState) => !prevState);
+    if (nodeId) {
+      setNodeId(nodeId);
+    }
+  };
   useEffect(() => {
     const project: IProject = projects.find((project: IProject) => project.id === id);
-    if (project) {
-      setNodes(project.workflow.nodes);
+    if (project && project.workflow.nodes && project.workflow.edges) {
+      const nodes = project.workflow.nodes.map((node) => {
+        return {
+          id: node.id,
+          type: 'customNode',
+          data: {
+            label: node.data.label,
+            id: node.id,
+            isSequential: node.data.isSequential,
+            toggleDrawer
+          },
+          position: node.position
+        };
+      });
+      setNodes(nodes);
       setEdges(project.workflow.edges);
     }
   }, [id, projects]);
   useEffect(() => {
     const handleBeforeUnload = () => {
-      dispatch(setWorkflow({ projectId: id, workflow: { nodes, edges } }));
+      if (nodes) {
+        dispatch(
+          setWorkflow({
+            id,
+            workflow: {
+              nodes: nodes.map((node) => ({
+                id: node.id,
+                type: node.type,
+                position: node.position,
+                data: {
+                  label: node.data.label,
+                  id: node.data.id,
+                  isSequential: node.data.isSequential
+                }
+              })),
+              edges
+            }
+          })
+        );
+      }
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => {
@@ -118,14 +159,14 @@ export default function Workflow() {
         onReconnect={onReconnect}
         onReconnectEnd={onReconnectEnd}
         fitView>
-        <Panel position={'top-left'} className="z-10">
-          <SideBar addNode={addNode} addEdge={addEdge} />
-        </Panel>
-        <Panel position={'bottom-right'}>
-          <SpeedDail />
-        </Panel>
-        <Background variant={BackgroundVariant.Dots} />
-        <Controls position={'bottom-left'} />
+        <WorkflowBody
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          nodeId={nodeId}
+          toggleDrawer={toggleDrawer}
+          addNode={addNode}
+          addEdge={addEdge}
+        />
       </ReactFlow>
     </ReactFlowProvider>
   );

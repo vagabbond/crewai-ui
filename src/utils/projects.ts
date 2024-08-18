@@ -1,7 +1,7 @@
 import { IInitialValues } from '../components/FormAddProject/FormAddProject';
 import { createNodesArray, createEdgesArray } from '../components/Workflow/Workflow.utils';
 import { IAgent } from '../types/interfaces/agent';
-import { IEdge } from '../types/interfaces/project';
+import { IEdge, WorkStatus } from '../types/interfaces/project';
 
 export const addNewProject = (newProject: IInitialValues, alivableAgents: IAgent[]) => {
   if (
@@ -24,6 +24,7 @@ export const addNewProject = (newProject: IInitialValues, alivableAgents: IAgent
     name: newProject.name,
     description: newProject.description,
     isSequential: newProject.isSequential,
+    status: WorkStatus.NotStarted,
     agents,
     llm: newProject.llm.value,
     workflow: { nodes, edges }

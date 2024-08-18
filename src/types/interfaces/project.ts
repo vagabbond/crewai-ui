@@ -16,6 +16,13 @@ export interface IWorkflow {
   edges: IEdge[];
 }
 
+export enum WorkStatus {
+  Working = 'Working',
+  Done = 'Done',
+  Failed = 'Failed',
+  NotStarted = 'Not Started'
+}
+
 export interface IProject {
   id: string;
   name: string;
@@ -24,4 +31,5 @@ export interface IProject {
   llm: string;
   workflow: IWorkflow;
   isSequential: boolean;
+  status: WorkStatus;
 }
