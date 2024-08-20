@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { IAgent } from '../../types/interfaces/agent';
-import { IProject } from '../../types/interfaces/project';
+import { IProject, WorkStatus } from '../../types/interfaces/project';
 import { ITool } from '../../types/interfaces/tool';
 import { addNewAgent } from '../../utils/agents';
 import { addNewProject } from '../../utils/projects';
@@ -39,6 +39,9 @@ const userSlice = createSlice({
       state.projects[projectIndex].agents.push(action.payload.agentId);
       state.projects[projectIndex].workflow.nodes.push(action.payload.workflow.node);
       state.projects[projectIndex].workflow.edges.push(action.payload.workflow.edge);
+      if (state.projects[projectIndex].status === 'Working') {
+        state.projects[projectIndex].status = WorkStatus.NeedSetup;
+      }
     },
     setProjectStatus(state, action) {
       state.projects = state.projects.map((project) => {
@@ -87,6 +90,18 @@ const userSlice = createSlice({
         return project;
       });
     },
+    updateTask(state, action) {
+      state.projects = state.projects.map((project) => {
+        if (project.id === action.payload.projectId) {
+          if (project.tasks[action.payload.task.id]) {
+            project.tasks[action.payload.task.id].value = action.payload.task.value;
+          } else {
+            project.tasks[action.payload.task.id] = { value: action.payload.task.value };
+          }
+        }
+        return project;
+      });
+    },
     deleteAgent(state, action) {
       state.alivableAgents = state.alivableAgents.filter((agent) => agent.id !== action.payload);
       state.projects = state.projects.map((project) => {
@@ -127,7 +142,8 @@ export const {
   deleteAgent,
   addAgentToProject,
   setWorkflow,
-  deleteNode
+  deleteNode,
+  updateTask
 } = userSlice.actions;
 
 export default userSlice.reducer;

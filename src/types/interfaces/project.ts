@@ -4,6 +4,12 @@ export interface INode {
   position: { x: number; y: number };
   data: { label: string; id: string; isSequential: boolean };
 }
+
+export interface ITask {
+  [key: string]: {
+    value: string;
+  };
+}
 export interface IEdge {
   id: string;
   source: string;
@@ -20,7 +26,8 @@ export enum WorkStatus {
   Working = 'Working',
   Done = 'Done',
   Failed = 'Failed',
-  NotStarted = 'Not Started'
+  NotStarted = 'Not Started',
+  NeedSetup = 'Need Setup',
 }
 
 export interface IProject {
@@ -32,4 +39,5 @@ export interface IProject {
   workflow: IWorkflow;
   isSequential: boolean;
   status: WorkStatus;
+  tasks: ITask;
 }

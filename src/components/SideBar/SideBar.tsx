@@ -58,7 +58,7 @@ const SideBar: FC<IProps> = ({ addNode, addEdge }) => {
               onBlur={togleSearch}
               onChange={(e) => setValue(e.target.value)}
               className="peer h-full w-full rounded-[7px] border border-blue-200 bg-transparent px-3 py-2.5 !pr-9 font-sans text-sm font-normal text-gray-700 outline outline-0  focus:border-2 "
-              placeholder="Search "
+              placeholder="Search"
             />
           </div>
         </div>

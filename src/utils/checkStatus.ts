@@ -10,6 +10,8 @@ export const checkStatus = (status: WorkStatus) => {
       return 'Done';
     case WorkStatus.Failed:
       return 'bg-green-500 text-white';
+    case WorkStatus.NeedSetup:
+      return 'bg-red-500 text-white';
     default:
       return 'Unknown status';
   }

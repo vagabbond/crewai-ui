@@ -146,10 +146,11 @@ export default function Workflow() {
       setEdges((eds) => eds && eds.filter((e) => e.id !== edge.id));
     }
     edgeReconnectSuccessful.current = true;
+    saveWorkflow();
   }, []);
+
   const saveWorkflow = () => {
     if (nodes) {
-      console.log('saveWorkflow', nodes);
       dispatch(
         setWorkflow({
           id,

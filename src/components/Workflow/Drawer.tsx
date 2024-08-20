@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { OverlayDrawer, DrawerBody, DrawerHeader } from '@fluentui/react-drawer';
+
 import DrawerEditNode from '../DrawerEditNode/DrawerEditNode';
 
 interface IProps {
@@ -16,10 +17,10 @@ const Drawer: FC<IProps> = ({ isOpen, setIsOpen, nodeId, toggleDrawer }) => {
       open={isOpen}
       onOpenChange={(_, { open }) => setIsOpen(open)}
       style={{ width: `400px` }}>
-      <DrawerBody className="bg-white border border-r-gray-500 h-full">
+      <DrawerBody className="bg-white border border-r-gray-500 h-full custom-scrollbar">
         <div className="p-4">
           <DrawerHeader>
-            <h2 className="text-2xl font-bold text-center">Edit Agent</h2>
+            <h2 className="text-2xl font-bold text-center">Configure Agent</h2>
           </DrawerHeader>
           <DrawerEditNode nodeId={nodeId} toggleDrawer={toggleDrawer} />
         </div>

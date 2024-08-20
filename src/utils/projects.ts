@@ -1,7 +1,7 @@
 import { IInitialValues } from '../components/FormAddProject/FormAddProject';
 import { createNodesArray, createEdgesArray } from '../components/Workflow/Workflow.utils';
 import { IAgent } from '../types/interfaces/agent';
-import { IEdge, WorkStatus } from '../types/interfaces/project';
+import { IEdge, ITask, WorkStatus } from '../types/interfaces/project';
 
 export const addNewProject = (newProject: IInitialValues, alivableAgents: IAgent[]) => {
   if (
@@ -24,14 +24,19 @@ export const addNewProject = (newProject: IInitialValues, alivableAgents: IAgent
     name: newProject.name,
     description: newProject.description,
     isSequential: newProject.isSequential,
-    status: WorkStatus.NotStarted,
+    status: WorkStatus.NeedSetup,
     agents,
     llm: newProject.llm.value,
-    workflow: { nodes, edges }
+    workflow: { nodes, edges },
+    tasks: {}
   };
   return project;
 };
 
 export const getProjectAgents = (agentsId: string[], alivableAgents: IAgent[]): IAgent[] => {
   return alivableAgents.filter((agent) => agentsId.includes(agent.id));
+};
+
+export const checkIfAllAgentHaveTask = (agents: string[], tasks: ITask) => {
+  return agents.every((agent) => tasks[agent]);
 };

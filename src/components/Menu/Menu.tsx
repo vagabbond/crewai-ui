@@ -7,11 +7,12 @@ import {
   MenuTrigger
 } from '@fluentui/react-menu';
 import { IoMdMore } from 'react-icons/io';
-import { useAppDispatch } from '../../redux/store';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { useNavigate } from 'react-router-dom';
 import { deleteProject, setProjectStatus } from '../../redux/user/userSlice';
 import { MdDelete, MdEdit } from 'react-icons/md';
-import { WorkStatus } from '../../types/interfaces/project';
+import { IProject, WorkStatus } from '../../types/interfaces/project';
+import { checkIfAllAgentHaveTask } from '../../utils/projects';
 
 interface IProps {
   id: string;
@@ -32,6 +33,8 @@ const Menu: FC<IProps> = ({ id, status }) => {
   const startProject = (projectId: string) => {
     dispatch(setProjectStatus({ id: projectId, status: WorkStatus.Working }));
   };
+  const { projects } = useAppSelector((state) => state.user);
+  const project = projects.find((project: IProject) => project.id === id);
   return (
     <MenuComponent closeOnScroll={true}>
       <MenuTrigger>
@@ -73,7 +76,10 @@ const Menu: FC<IProps> = ({ id, status }) => {
               onClick={() => {
                 startProject(id);
               }}
-              disabled={status === WorkStatus.Working}>
+              disabled={
+                status === WorkStatus.Working ||
+                !checkIfAllAgentHaveTask(project.agents, project.tasks)
+              }>
               Start project
             </button>
           </MenuItem>

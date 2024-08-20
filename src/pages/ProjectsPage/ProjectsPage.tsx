@@ -24,7 +24,7 @@ const ProjectsPage = () => {
   const navigate = useNavigate();
 
   const { currentItems, totalPages, currentPage, paginate } = usePagination({
-    itemsPerPage: 7,
+    itemsPerPage: 6,
     items: projects,
     isSort: sort,
     search
@@ -80,188 +80,181 @@ const ProjectsPage = () => {
             </button>
           </div>
         </header>
-        <div className="h-full flex flex-col justify-between">
-          <main>
-            <div className="mt-6 md:flex md:items-center md:justify-between">
-              <form className="relative flex items-center mt-4 md:mt-0">
-                <span className="absolute top-2 left-2">
-                  <IoSearch className="w-5 h-5 text-gray-400" />
-                </span>
-                <input
-                  type="text"
-                  placeholder="Search"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="block w-full py-1.5 pr-5 text-gray-700 bg-white border border-gray-200 rounded-lg md:w-80 placeholder-gray-400/70 pl-11 rtl:pr-11 rtl:pl-5 focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                />
-              </form>
-            </div>
-            <div className="flex flex-col mt-6">
-              <div className="overflow-x-auto ">
-                <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                  <div className="overflow-hidden border border-gray-200 md:rounded-lg">
-                    <table className="min-w-full divide-y divide-gray-200 ">
-                      <thead className="bg-gray-50 ">
-                        <tr key="head">
-                          <th
-                            key="project"
-                            scope="col"
-                            className="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 ">
-                            <button
-                              className="flex items-center gap-x-3 focus:outline-none"
-                              onClick={toggleSort}>
-                              <span>Project name</span>
-                              <FaSortAlphaDown className="h-6" />
-                            </button>
-                          </th>
-                          <th
-                            key="status"
-                            scope="col"
-                            className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 ">
-                            Status
-                          </th>
-                          <th
-                            key="about"
-                            scope="col"
-                            className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 ">
-                            About
-                          </th>
-                          <th
-                            key="agents"
-                            scope="col"
-                            className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 ">
-                            Agents involved
-                          </th>
-                          <th
-                            key="llm"
-                            scope="col"
-                            className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 ">
-                            Manager LLM
-                          </th>
-                          <th key="edit" scope="col" className="relative py-3.5 px-4">
-                            <span className="sr-only">Edit</span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {items.length > 0 ? (
-                          items.map((project: IProject) => (
-                            <tr key={project.id}>
-                              <td
-                                key={project.name}
-                                className="px-4 py-4 text-sm font-medium whitespace-nowrap">
-                                <div>
-                                  <h2 className="font-medium text-gray-800 ">{project.name}</h2>
-                                </div>
-                              </td>
-                              <td
-                                key={project.status + project.id}
-                                className="px-4 py-4 text-sm whitespace-nowrap">
-                                <div
-                                  className={`rounded-lg w-fit p-2 ${checkStatus(project.status)}`}>
-                                  <p>{project.status}</p>
-                                </div>
-                              </td>
-                              <td key={project.description} className="px-4 py-4 text-sm">
-                                <div>
-                                  <p className="text-gray-500 ">{project.description}</p>
-                                </div>
-                              </td>
-                              <td key={project.agents.join('')} className="px-4 py-4 text-sm">
-                                <div
-                                  key={project.agents.join('') + project.id}
-                                  className="flex items-center">
-                                  {project.agents.length > 0 ? (
-                                    project.agents.map((agent, index) => (
-                                      <button
-                                        type="button"
-                                        key={project.id + agent + index}
-                                        onClick={() => onLinkClick(agent)}
-                                        className="text-xs text-blue-500">
-                                        {agent}
-                                        {index < project.agents.length - 1 && ', '}
-                                      </button>
-                                    ))
-                                  ) : (
-                                    <GoDash
-                                      key={'noagents' + project.id}
-                                      className="text-gray-500"
-                                    />
-                                  )}
-                                </div>
-                              </td>
-                              <td
-                                key={project.llm + project.id}
-                                className="px-4 py-4 text-sm whitespace-nowrap">
-                                <p className="text-xs text-blue-500 ">
-                                  {project.llm.toLocaleUpperCase()}
-                                </p>
-                              </td>
-                              <td
-                                key={project.id + 'tools'}
-                                className="px-4 py-4 text-sm whitespace-nowrap">
-                                <Menu id={project.id} status={project.status} />
-                              </td>
-                            </tr>
-                          ))
-                        ) : (
-                          <tr key="no-projects">
+        <main>
+          <div className="mt-6 md:flex md:items-center md:justify-between">
+            <form className="relative flex items-center mt-4 md:mt-0">
+              <span className="absolute top-2 left-2">
+                <IoSearch className="w-5 h-5 text-gray-400" />
+              </span>
+              <input
+                type="text"
+                placeholder="Search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="block w-full py-1.5 pr-5 text-gray-700 bg-white border border-gray-200 rounded-lg md:w-80 placeholder-gray-400/70 pl-11 rtl:pr-11 rtl:pl-5 focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+              />
+            </form>
+          </div>
+          <div className="flex flex-col mt-6">
+            <div className="overflow-x-auto ">
+              <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                <div className="overflow-hidden border border-gray-200 md:rounded-lg">
+                  <table className="min-w-full divide-y divide-gray-200 ">
+                    <thead className="bg-gray-50 ">
+                      <tr key="head">
+                        <th
+                          key="project"
+                          scope="col"
+                          className="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 ">
+                          <button
+                            className="flex items-center gap-x-3 focus:outline-none"
+                            onClick={toggleSort}>
+                            <span>Project name</span>
+                            <FaSortAlphaDown className="h-6" />
+                          </button>
+                        </th>
+                        <th
+                          key="status"
+                          scope="col"
+                          className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 ">
+                          Status
+                        </th>
+                        <th
+                          key="about"
+                          scope="col"
+                          className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 ">
+                          About
+                        </th>
+                        <th
+                          key="agents"
+                          scope="col"
+                          className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 ">
+                          Agents involved
+                        </th>
+                        <th
+                          key="llm"
+                          scope="col"
+                          className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 ">
+                          Manager LLM
+                        </th>
+                        <th key="edit" scope="col" className="relative py-3.5 px-4">
+                          <span className="sr-only">Edit</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {items.length > 0 ? (
+                        items.map((project: IProject) => (
+                          <tr key={project.id}>
                             <td
-                              colSpan={5}
-                              className="px-4 py-4 text-sm font-medium text-gray-500 ">
-                              No projects found
+                              key={project.name}
+                              className="px-4 py-4 text-sm font-medium whitespace-nowrap">
+                              <div>
+                                <h2 className="font-medium text-gray-800 ">{project.name}</h2>
+                              </div>
+                            </td>
+                            <td
+                              key={project.status + project.id}
+                              className="px-4 py-4 text-sm whitespace-nowrap">
+                              <div
+                                className={`rounded-lg w-fit p-2 ${checkStatus(project.status)}`}>
+                                <p>{project.status}</p>
+                              </div>
+                            </td>
+                            <td key={project.description} className="px-4 py-4 text-sm">
+                              <div>
+                                <p className="text-gray-500 ">{project.description}</p>
+                              </div>
+                            </td>
+                            <td key={project.agents.join('')} className="px-4 py-4 text-sm">
+                              <div
+                                key={project.agents.join('') + project.id}
+                                className="flex items-center">
+                                {project.agents.length > 0 ? (
+                                  project.agents.map((agent, index) => (
+                                    <button
+                                      type="button"
+                                      key={project.id + agent + index}
+                                      onClick={() => onLinkClick(agent)}
+                                      className="text-xs text-blue-500">
+                                      {agent}
+                                      {index < project.agents.length - 1 && ', '}
+                                    </button>
+                                  ))
+                                ) : (
+                                  <GoDash key={'noagents' + project.id} className="text-gray-500" />
+                                )}
+                              </div>
+                            </td>
+                            <td
+                              key={project.llm + project.id}
+                              className="px-4 py-4 text-sm whitespace-nowrap">
+                              <p className="text-xs text-blue-500 ">
+                                {project.llm.toLocaleUpperCase()}
+                              </p>
+                            </td>
+                            <td
+                              key={project.id + 'tools'}
+                              className="px-4 py-4 text-sm whitespace-nowrap">
+                              <Menu id={project.id} status={project.status} />
                             </td>
                           </tr>
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
+                        ))
+                      ) : (
+                        <tr key="no-projects">
+                          <td colSpan={5} className="px-4 py-4 text-sm font-medium text-gray-500 ">
+                            No projects found
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
-          </main>
-          <footer className="sm:flex sm:items-center sm:justify-between w-full p-5">
-            <div className="text-sm text-gray-500 ">
-              Page{' '}
-              <span className="font-medium text-gray-700 ">
-                {items.length > 0 ? `${currentPage} of ${totalPages}` : 0}
-              </span>
-            </div>
+          </div>
+        </main>
+        <footer className="sm:flex sm:items-center sm:justify-between w-full p-5">
+          <div className="text-sm text-gray-500 ">
+            Page{' '}
+            <span className="font-medium text-gray-700 ">
+              {items.length > 0 ? `${currentPage} of ${totalPages}` : 0}
+            </span>
+          </div>
 
-            <div className="flex items-center mt-4 gap-x-4 sm:mt-0">
-              <button
-                key="prev"
-                type="button"
-                onClick={() => paginate(currentPage - 1)}
-                disabled={totalPages === 1 || items.length === 0 || currentPage === 1}
-                className={`flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200  border rounded-md sm:w-auto gap-x-2 
+          <div className="flex items-center mt-4 gap-x-4 sm:mt-0">
+            <button
+              key="prev"
+              type="button"
+              onClick={() => paginate(currentPage - 1)}
+              disabled={totalPages === 1 || items.length === 0 || currentPage === 1}
+              className={`flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200  border rounded-md sm:w-auto gap-x-2 
               ${
                 totalPages === 1 || items.length === 0 || currentPage === 1
                   ? 'bg-gray-200'
                   : 'bg-white hover:bg-gray-100'
               }
               `}>
-                <MdNavigateBefore className="w-5 h-5 rtl:-scale-x-100" />
-                <span>Previous</span>
-              </button>
-              <button
-                key="next"
-                type="button"
-                onClick={() => paginate(currentPage + 1)}
-                disabled={totalPages === 1 || items.length === 0 || currentPage === totalPages}
-                className={`flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200  border rounded-md sm:w-auto gap-x-2 
+              <MdNavigateBefore className="w-5 h-5 rtl:-scale-x-100" />
+              <span>Previous</span>
+            </button>
+            <button
+              key="next"
+              type="button"
+              onClick={() => paginate(currentPage + 1)}
+              disabled={totalPages === 1 || items.length === 0 || currentPage === totalPages}
+              className={`flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200  border rounded-md sm:w-auto gap-x-2 
               ${
                 totalPages === 1 || items.length === 0 || currentPage === totalPages
                   ? 'bg-gray-200'
                   : 'bg-white hover:bg-gray-100'
               }
               `}>
-                <span>Next</span>
-                <MdNavigateNext className="w-5 h-5 rtl:-scale-x-100" />
-              </button>
-            </div>
-          </footer>
-        </div>
+              <span>Next</span>
+              <MdNavigateNext className="w-5 h-5 rtl:-scale-x-100" />
+            </button>
+          </div>
+        </footer>
       </section>
       <Modal
         isOpen={isOpen}
